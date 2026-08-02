@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Test_MVC_EF_01;
 using Test_MVC_EF_01.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// Data Seed - Bogus Faker
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try {await SeedData.InitAsync(context);}
+    catch (Exception ex) {throw;}
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
