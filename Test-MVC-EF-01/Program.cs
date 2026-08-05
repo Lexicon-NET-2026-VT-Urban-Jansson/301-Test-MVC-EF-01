@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Test_MVC_EF_01;
 using Test_MVC_EF_01.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set global sv-SE for the app.
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("sv-SE");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("sv-SE");
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
