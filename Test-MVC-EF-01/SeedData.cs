@@ -30,7 +30,7 @@ namespace Test_MVC_EF_01
 
             for (int i = 0; i < numberOfEmployees; i++)
             {
-                string fName = _faker.Name.FirstName();
+                string fName = _faker!.Name.FirstName();
                 string lName = _faker.Name.LastName();
                 Employee employee = new Employee()
                 {
