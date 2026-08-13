@@ -1,0 +1,9 @@
+### Get all employees
+GET http://localhost:5278/api/employees
+
+### Get one employee
+GET http://localhost:5278/api/employees/1005
+
+### Delete one employee
+DELETE http://localhost:5278/api/employees/1005
+

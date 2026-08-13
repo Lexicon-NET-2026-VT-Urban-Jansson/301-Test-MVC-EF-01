@@ -8,7 +8,7 @@ public class EmployeesController : Controller
 {
     private readonly ApplicationDbContext _context;
 
-    public EmployeesController(ApplicationDbContext context)
+    public EmployeesController(ApplicationDbContext context) // <-- Dependency Injection (DI)!
     {
         _context = context;
     }
