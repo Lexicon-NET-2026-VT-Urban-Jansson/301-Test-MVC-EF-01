@@ -40,7 +40,8 @@ namespace Test_MVC_EF_01
                     ZipCode = _faker.Address.ZipCode(),
                     City = _faker.Address.City(),
                     EmailAddress = _faker.Internet.Email(fName, lName),
-                    PhoneNumber = _faker.Phone.PhoneNumber()
+                    PhoneNumber = _faker.Phone.PhoneNumber("0##-### ## ##")
+                    //PhoneNumber = _faker.Phone.PhoneNumber()
                 };
                 employees.Add(employee);
             }

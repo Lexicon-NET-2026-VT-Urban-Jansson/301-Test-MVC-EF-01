@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 using Test_MVC_EF_01;
 using Test_MVC_EF_01.Data;
@@ -13,11 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString)
+           .LogTo(Console.WriteLine, LogLevel.Information) // SQL-log in Console! 
+           .EnableSensitiveDataLogging()); // Show parameters! 
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -31,13 +36,34 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-//// Data Seed - Bogus Faker
+// Data Seed - Bogus Faker
 //using (var scope = app.Services.CreateScope())
 //{
 //    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 //    try { await SeedData.InitAsync(context); }
 //    catch (Exception ex) { throw; }
 //}
+
+// Data Seed - Bogus Faker (SAFE VERSION!)
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    if (!context.Employees.Any())
+    {
+        try
+        {
+            await SeedData.InitAsync(context);
+            logger.LogInformation("✅ Seeded employees successfully");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "❌ Seeding failed: {Message}", ex.Message);
+        }
+    }
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
